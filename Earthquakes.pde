@@ -64,7 +64,7 @@ void draw() {
     noStroke(); 
     /*
     maxMag*a + b = 1
-     minMag*a + b = 0
+    minMag*a + b = 0
      */
     a = 1/(maxMag-minMag);
     b = -minMag*a;
@@ -81,6 +81,9 @@ void draw() {
 void mouseDragged() {
   if (mouseY < height && mouseY > height*0.92) {
     slider.pressed = true;
+    slider.update(mouseX);
+  }
+   if(slider.pressed == true){
     slider.update(mouseX);
   }
 }

@@ -16,15 +16,15 @@ class Slider {
     for (int i=0; i<yearList.length; i++) {
       yearList[i] = years.get(i);
     }
-    
+
     w1 = width*0.10; 
     w2 = width*0.90; 
     y = height*0.95;
     h = height*0.005; 
-    
+
     firstPos = new PVector (w1, y);
     lastPos = new PVector (w2, y);
-    
+
     firstYear = yearList[0];
     lastYear = yearList[yearList.length-1];
 
@@ -48,7 +48,6 @@ class Slider {
     actualX = posList[selected].x;
   }
 
-
   void display() {
     stroke(c1);
     strokeWeight(height*0.003);
@@ -61,7 +60,6 @@ class Slider {
     }
     controller();
     limitYears();
-    
   }
 
   void controller() {
@@ -90,14 +88,14 @@ class Slider {
     //Use the selected year so it changes!!
     text(str(yearList[selected]), conPos.x, conPos.y-height*0.05);
   }
-  
-  void limitYears(){
+
+  void limitYears() {
     //draw the first and last years
     rectMode(CENTER);
     fill(c1);
     rect(firstPos.x-width*0.045, firstPos.y, width*0.05, height*0.035, 500);
-    rect(lastPos.x+width*0.045, lastPos.y, width*0.05,  height*0.035, 200);
-    
+    rect(lastPos.x+width*0.045, lastPos.y, width*0.05, height*0.035, 200);
+
     textSize(height*0.020);
     textAlign(CENTER, CENTER); //horizontally and vertically
     fill(255);
@@ -106,6 +104,7 @@ class Slider {
   }
 
   void update(float posX) {
+    float prev = selected;
     for (int i=0; i<posList.length; i++) {
       if (posX < w1) {
         actualX = w1;
@@ -116,6 +115,10 @@ class Slider {
       } else if (posX > posList[i].x-step/2 && posX < posList[i].x+step/2) {
         actualX = posList[i].x;
         selected = i;
+      }
+      if (prev != selected) {
+        removeEarthquakes();
+        loadEarthquakes();
       }
     }
   }

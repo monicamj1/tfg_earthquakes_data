@@ -6,9 +6,10 @@ IntList yearList;
 int actualYear, newYear;
 
 //earthquakes bubbles array
-ArrayList<Bubble> bubbles = new ArrayList<Bubble>();
+ArrayList<Bubble> bubbles;
 
-boolean details;
+boolean showDetails;
+Details details;
 
 
 void setup() {
@@ -37,23 +38,25 @@ void setup() {
       yearList.append(actualYear);
     }
   }
-
   //initialize slider and send list
   slider = new Slider(yearList); 
 
   maxMag = max(magArray);
   minMag = min(magArray);
 
+  //initialize bubbles array with Bubble objects
+  bubbles = new ArrayList<Bubble>();
+
   //add bubble object to bubbles array
   loadEarthquakes();
 
-  details = false;
+  showDetails = false;
 }
 
 
 void draw() {
 
-  shape(map, 0, 0, width, height); 
+  shape(map, 0, 0, width, height);
 
   //display each bubble from the array
   for (Bubble bubble : bubbles) {
@@ -61,26 +64,39 @@ void draw() {
   }
 
   slider.display();
+
+  if (showDetails) {
+    details.display();
+  }
 }
 
 
 void mouseDragged() {
-  if (mouseY < height && mouseY > height*0.92) {
-    slider.pressed = true;
-    slider.update(mouseX);
-  }
-  if (slider.pressed == true) {
-    slider.update(mouseX);
+  if (showDetails == false) {
+    if (mouseY < height && mouseY > height*0.92) {
+      slider.pressed = true;
+      slider.update(mouseX);
+    }
+    if (slider.pressed == true) {
+      slider.update(mouseX);
+    } else {
+      showDetails = false;
+    }
   }
 }
 
 
 void mousePressed() {
-  if (mouseY < height && mouseY > height*0.92) {
-    slider.pressed = true;
-    slider.update(mouseX);
+  if (showDetails == false) {
+    if (mouseY < height && mouseY > height*0.92) {
+      slider.pressed = true;
+      slider.update(mouseX);
+    } else {
+      earthquakesList();
+    }
+  } else {
+    showDetails = false;
   }
-  earthquakesList();
 }
 
 
@@ -97,7 +113,7 @@ void loadEarthquakes() {
   }
 }
 
-//remove all earthquales (Bubble objects) from the array
+//remove all earthquakes (Bubble objects) from the array
 void removeEarthquakes() {
   for (int i = bubbles.size()-1; i>=0; i--) {
     bubbles.remove(i);
@@ -108,5 +124,10 @@ void removeEarthquakes() {
 void earthquakesList() {
   for (Bubble bubble : bubbles) {
     bubble.isClicked();
+    if (bubble.selected) {
+      showDetails = true;
+      TableRow row = table.findRow(str(bubble.id), "I_D");
+      details = new Details(row, bubble.c);
+    }
   }
 }

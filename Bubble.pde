@@ -22,6 +22,9 @@ class Bubble {
     //set colors
     red = color(255, 102, 102);
     orange = color(255, 204, 102);
+
+    //set selected
+    selected = false;
   }
 
   void display(float maxMag, float minMag) {
@@ -43,15 +46,15 @@ class Bubble {
     ellipse(lon, lat, radius, radius);
   }
 
- //if the mouse clicked in the bubble area, then selected = true
+  //if the mouse clicked in the bubble area, then selected = true
   void isClicked() {
-   if (mouseX < lon+radius && mouseX > lon-radius && mouseY < lat+radius && mouseY > lat-radius) {
-        selected = true;
+    if (mouseX < lon+radius && mouseX > lon-radius && mouseY < lat+radius && mouseY > lat-radius) {
+      selected = true;
     }
   }
-  
-  
-  void noClicked(){
+
+
+  void noClicked() {
     selected = false;
   }
 }

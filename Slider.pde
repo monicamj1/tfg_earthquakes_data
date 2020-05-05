@@ -104,7 +104,7 @@ class Slider {
   }
 
   void update(float posX) {
-    float prev = selected;
+    float prev = selected; //save previous selected
     for (int i=0; i<posList.length; i++) {
       if (posX < w1) {
         actualX = w1;
@@ -116,6 +116,7 @@ class Slider {
         actualX = posList[i].x;
         selected = i;
       }
+      //check if the selected year has changed
       if (prev != selected) {
         removeEarthquakes();
         loadEarthquakes();

@@ -95,6 +95,7 @@ void mousePressed() {
       earthquakesList();
     }
   } else {
+    earthquakesList();
     showDetails = false;
   }
 }
@@ -124,10 +125,12 @@ void removeEarthquakes() {
 void earthquakesList() {
   for (Bubble bubble : bubbles) {
     bubble.isClicked();
-    if (bubble.selected) {
+    if (bubble.selected && showDetails == false) {
       showDetails = true;
       TableRow row = table.findRow(str(bubble.id), "I_D");
       details = new Details(row, bubble.c);
+    }else{
+      bubble.noClicked();
     }
   }
 }

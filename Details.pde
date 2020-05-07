@@ -16,17 +16,19 @@ class Details {
     info.append(nf(row.getInt("TOTAL_HOUSES_DESTROYED"),1)); //houses destroyed
     info.append(nf(row.getInt("TOTAL_DAMAGE_MILLIONS_DOLLARS"),1)); //damages
     info.append(nf(row.getInt("FOCAL_DEPTH"),1)); //focal depth
-    info.append(nf(row.getFloat("EQ_PRIMARY"), 0, 1)); //magnitude
-    
-    for(int i = 0; i<info.size()-1; i++){
-      if(info.get(i) == "0"){
-        println("hola");
-        info.remove(i);
-        info.set(i, "?");
-      }
+    if (Float.isNaN(row.getFloat("EQ_PRIMARY"))) {
+      info.append("? ? ?"); //magnitude
+    } else{
+      info.append(nf(row.getFloat("EQ_PRIMARY"), 0, 1)); //magnitude
     }
     
-    
+    for(int i = 0; i<info.size()-1; i++){
+      String s = "0";
+      if(info.get(i).equals(s)){
+        info.set(i, "? ? ?");
+      }
+    }
+
     country = row.getString("COUNTRY");
     year = row.getString("YEAR");
     month = nf(row.getInt("MONTH"), 2);
@@ -84,7 +86,7 @@ class Details {
     ellipse(e6.x, e6.y, r2, r2);
 
 
-    //TEXT
+    //CENTRAL TEXT
     fill(255);
     textAlign(CENTER, CENTER);
     
@@ -118,6 +120,7 @@ class Details {
 
     //SUBTITILES
     textSize(height*0.018);
+    text("people", e1.x, e1.y+height*0.04);
     text("millions $", e4.x, e4.y+height*0.04);
     text("0 to 700km", e5.x, e5.y+height*0.04);
     text("0.0 to 9.9", e6.x, e6.y+height*0.04);

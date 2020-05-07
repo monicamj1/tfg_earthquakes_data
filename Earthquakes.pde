@@ -55,14 +55,13 @@ void setup() {
 
 
 void draw() {
-
   shape(map, 0, 0, width, height);
 
   //display each bubble from the array
   for (Bubble bubble : bubbles) {
     bubble.display(maxMag, minMag);
   }
-
+  
   slider.display();
 
   if (showDetails) {

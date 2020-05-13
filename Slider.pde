@@ -64,29 +64,71 @@ class Slider {
 
   void controller() {
     PVector conPos = new PVector(actualX, y);
+    float add;
     if (!pressed) {
-      fill(c2);
-      noStroke();
-      ellipse(conPos.x, conPos.y, height*0.015, height*0.015);
-      fill(c3);
-      noStroke();
-      ellipse(conPos.x, conPos.y, height*0.005, height*0.005);
-    } else { 
-      fill(c3);
-      noStroke();
-      ellipse(conPos.x, conPos.y, height*0.018, height*0.018);
-      fill(c2);
-      noStroke();
-      ellipse(conPos.x, conPos.y, height*0.008, height*0.008);
+      add = 1;
+    } else {
+      add = 1.2;
     }
+    dropShadow(conPos, height*0.015*add, add);
+    fill(c2);
+    noStroke();
+    ellipse(conPos.x, conPos.y, height*0.015*add, height*0.015*add);
+    fill(c3);
+    noStroke();
+    ellipse(conPos.x, conPos.y, height*0.005*add, height*0.005*add);
+    /*
+    if (!pressed) {
+     dropShadow(conPos, height*0.015);
+     fill(c2);
+     noStroke();
+     ellipse(conPos.x, conPos.y, height*0.015, height*0.015);
+     fill(c3);
+     noStroke();
+     ellipse(conPos.x, conPos.y, height*0.005, height*0.005);
+     } else { 
+     dropShadow(conPos, height*0.018);
+     fill(c2);
+     noStroke();
+     ellipse(conPos.x, conPos.y, height*0.018, height*0.018);
+     fill(c3);
+     noStroke();
+     ellipse(conPos.x, conPos.y, height*0.008, height*0.008);
+     }*/
+
     rectMode(CENTER);
     fill(c2);
-    rect(conPos.x, conPos.y-height*0.047, width*0.05, height*0.035, 500);
-    textSize(height*0.020);
+    rect(conPos.x, conPos.y-height*0.047*add, width*0.05*add, height*0.035*add, 500);
+    textSize(height*0.020*add);
     textAlign(CENTER, CENTER);
     fill(255);
     //Use the selected year so it changes!!
-    text(str(yearList[selected]), conPos.x, conPos.y-height*0.05);
+    text(str(yearList[selected]), conPos.x, conPos.y-height*0.05*add);
+  }
+
+  void dropShadow(PVector pos, float r, float a) {
+    float aux = r;
+    float w = width*0.05;
+    float h = height*0.035;
+    float j, f, f2;
+    if (!pressed) {
+      j = 5;
+      f = 0.08;
+      f2 = 0.02;
+    } else {
+      j = 100;
+      f =0.1;
+      f2 = 0.05;
+    }
+    for (int i=10; i>=0; i-=1) {
+      fill(j, j, j, i);
+      noStroke();
+      ellipse(pos.x, pos.y, aux, aux);
+      rect(pos.x, pos.y-height*0.047, w, h, 500);
+      aux += aux*f;
+      w += w*f2;
+      h += h*f2;
+    }
   }
 
   void limitYears() {

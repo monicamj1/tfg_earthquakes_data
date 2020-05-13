@@ -67,6 +67,8 @@ class Details {
 
     //ELLIPSES
     ellipseMode(RADIUS);
+    
+    dropShadow();
     noStroke();
     fill(c);
 
@@ -126,6 +128,26 @@ class Details {
     text("0.0 to 9.9", e6.x, e6.y+height*0.04);
 
     popMatrix();
+  }
+  
+  void dropShadow(){
+    float aux0 = r1-width*0.004;
+    float aux1 = r2-width*0.004;
+    float a = width*0.004;
+
+    for(int i=32; i>=0; i-=2){
+      fill(180,180,180,i);
+      noStroke();
+      ellipse(center.x+a, center.y+a, aux0, aux0);
+      ellipse(e1.x+a, e1.y+a, aux1, aux1);
+      ellipse(e2.x+a, e2.y+a, aux1, aux1);
+      ellipse(e3.x+a, e3.y+a, aux1, aux1);
+      ellipse(e4.x+a, e4.y+a, aux1, aux1);
+      ellipse(e5.x+a, e5.y+a, aux1, aux1);
+      ellipse(e6.x+a, e6.y+a, aux1, aux1);
+      aux0+=aux0*0.01;
+      aux1+=aux1*0.01;
+    }
   }
 
 

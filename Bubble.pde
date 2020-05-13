@@ -42,8 +42,20 @@ class Bubble {
     if (Float.isNaN(mag)) {
       c = color(150, 150, 150);
     } 
+    dropShadow();
     fill(c); 
     ellipse(lon, lat, radius, radius);
+    
+  }
+  
+  void dropShadow(){
+    float aux = radius;
+    for(int i=16; i>=0; i-=2){
+      fill(100,100,100,i);
+      noStroke();
+      ellipse(lon, lat, aux, aux);
+      aux+=aux*0.08;
+    }
   }
 
   //if the mouse clicked in the bubble area, then selected = true

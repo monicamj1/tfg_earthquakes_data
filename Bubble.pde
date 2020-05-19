@@ -42,19 +42,25 @@ class Bubble {
     if (Float.isNaN(mag)) {
       c = color(150, 150, 150);
     } 
+    
+    //First we draw the shadow
     dropShadow();
+    
+    //Then we draw the ellipse
     fill(c); 
     ellipse(lon, lat, radius, radius);
     
   }
   
   void dropShadow(){
+    //save the radius in a new auxiliar variable
     float aux = radius;
+    
     for(int i=16; i>=0; i-=2){
-      fill(100,100,100,i);
+      fill(100,100,100,i); //fill color with less opacity each time
       noStroke();
       ellipse(lon, lat, aux, aux);
-      aux+=aux*0.08;
+      aux+=aux*0.08; //shadow radius increases
     }
   }
 

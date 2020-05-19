@@ -1,13 +1,19 @@
+//database
 Table table;
-float  maxMag, minMag;
+
+//map
 PShape map;
+
+//slider
 Slider slider;
 IntList yearList;
 int actualYear, newYear;
 
-//earthquakes bubbles array
+//earthquales bubbles
 ArrayList<Bubble> bubbles;
+float  maxMag, minMag;
 
+//second screen
 boolean showDetails;
 Details details;
 
@@ -16,11 +22,11 @@ void setup() {
   //size (720, 480);
   fullScreen();
 
-  map = loadShape("map.svg");
+  map = loadShape("map.svg"); 
 
   table = loadTable("database", "header, tsv"); 
 
-  float[] magArray = new float[table.getRowCount()];
+  float[] magArray = new float[table.getRowCount()]; 
 
   yearList = new IntList();
 

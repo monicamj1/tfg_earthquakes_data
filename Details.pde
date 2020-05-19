@@ -133,7 +133,7 @@ class Details {
   void dropShadow(){
     float aux0 = r1-width*0.004;
     float aux1 = r2-width*0.004;
-    float a = width*0.004;
+    float a = width*0.004; //shadow deviation
 
     for(int i=32; i>=0; i-=2){
       fill(180,180,180,i);

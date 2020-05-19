@@ -64,58 +64,45 @@ class Slider {
 
   void controller() {
     PVector conPos = new PVector(actualX, y);
+    //factor that changes when is selected
     float add;
     if (!pressed) {
-      add = 1;
+      add = 1; //dimensions won't change
     } else {
-      add = 1.2;
+      add = 1.2; //dimensions will increase x1.2
     }
-    dropShadow(conPos, height*0.015*add, add);
+    //CONTROLLER
+    //draw shadow first!
+    dropShadow(conPos, height*0.015*add);
     fill(c2);
     noStroke();
     ellipse(conPos.x, conPos.y, height*0.015*add, height*0.015*add);
     fill(c3);
     noStroke();
     ellipse(conPos.x, conPos.y, height*0.005*add, height*0.005*add);
-    /*
-    if (!pressed) {
-     dropShadow(conPos, height*0.015);
-     fill(c2);
-     noStroke();
-     ellipse(conPos.x, conPos.y, height*0.015, height*0.015);
-     fill(c3);
-     noStroke();
-     ellipse(conPos.x, conPos.y, height*0.005, height*0.005);
-     } else { 
-     dropShadow(conPos, height*0.018);
-     fill(c2);
-     noStroke();
-     ellipse(conPos.x, conPos.y, height*0.018, height*0.018);
-     fill(c3);
-     noStroke();
-     ellipse(conPos.x, conPos.y, height*0.008, height*0.008);
-     }*/
-
+    //YEAR
     rectMode(CENTER);
     fill(c2);
     rect(conPos.x, conPos.y-height*0.047*add, width*0.05*add, height*0.035*add, 500);
     textSize(height*0.020*add);
     textAlign(CENTER, CENTER);
     fill(255);
-    //Use the selected year so it changes!!
+    //Use the selected year so it changes
     text(str(yearList[selected]), conPos.x, conPos.y-height*0.05*add);
   }
 
-  void dropShadow(PVector pos, float r, float a) {
-    float aux = r;
-    float w = width*0.05;
-    float h = height*0.035;
-    float j, f, f2;
+  void dropShadow(PVector pos, float r) {
+    float aux = r; //controller radius
+    float w = width*0.05; //year rect width
+    float h = height*0.035; //year rect height
+    float j, f, f2; //grey color and factors
     if (!pressed) {
+      //less difussion
       j = 5;
       f = 0.08;
       f2 = 0.02;
     } else {
+      //more difussion when selected
       j = 100;
       f =0.1;
       f2 = 0.05;

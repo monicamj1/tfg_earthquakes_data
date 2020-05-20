@@ -65,7 +65,7 @@ void draw() {
 
   //display each bubble from the array
   for (Bubble bubble : bubbles) {
-    bubble.display(maxMag, minMag);
+    bubble.display(maxMag, minMag, showDetails);
   }
   
   slider.display();
@@ -102,6 +102,7 @@ void mousePressed() {
   } else {
     earthquakesList();
     showDetails = false;
+   // details.close = false; FADE OUT
   }
 }
 

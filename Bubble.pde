@@ -1,6 +1,6 @@
 class Bubble {
-  int id;
-  float mag, depth, radius, lat, lon;
+  int id, count;
+  float mag, depth, radius, lat, lon, incr, r;
   color orange, red, c;
   boolean selected;
 
@@ -15,6 +15,7 @@ class Bubble {
     //get depth and calculate radius
     depth = row.getInt("FOCAL_DEPTH");
     radius = map(depth, 0, 700, width*0.006, width*0.001);
+    r = radius;
 
     //get magnitude
     mag = row.getFloat("EQ_PRIMARY");
@@ -25,9 +26,13 @@ class Bubble {
 
     //set selected
     selected = false;
+
+    //set increase
+    incr = width*0.00003;
+    count = (int)random(0, 50);
   }
 
-  void display(float maxMag, float minMag) {
+  void display(float maxMag, float minMag, boolean sD) {
     ellipseMode(RADIUS);
     noStroke(); 
 
@@ -42,22 +47,30 @@ class Bubble {
     if (Float.isNaN(mag)) {
       c = color(150, 150, 150);
     } 
-    
+
     //First we draw the shadow
     dropShadow();
-    
+
     //Then we draw the ellipse
     fill(c); 
     ellipse(lon, lat, radius, radius);
-    
+
+    if (!sD) {
+      if(count == 50) {
+        incr = -incr;
+        count = 0;
+      }
+      radius += incr;
+      count++;
+    }
   }
-  
-  void dropShadow(){
+
+  void dropShadow() {
     //save the radius in a new auxiliar variable
     float aux = radius;
-    
-    for(int i=16; i>=0; i-=2){
-      fill(100,100,100,i); //fill color with less opacity each time
+
+    for (int i=16; i>=0; i-=2) {
+      fill(100, 100, 100, i); //fill color with less opacity each time
       noStroke();
       ellipse(lon, lat, aux, aux);
       aux+=aux*0.08; //shadow radius increases

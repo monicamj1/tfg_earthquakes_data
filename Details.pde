@@ -3,28 +3,30 @@ class Details {
   String country, day, month, year, hour, minute;
   StringList info;
   PVector center, e1, e2, e3, e4, e5, e6;
-  float r1, r2, l, extra;
+  float r1, r2, l, extra, incr;
   color c;
   float titleSize;
+  int opacity, count;
+  //boolean close; FADE OUT
 
 
   Details(TableRow row, color magColor) {
-    
+
     info  = new StringList();
-    info.append(nf(row.getInt("TOTAL_DEATHS"),1)); //deaths
-    info.append(nf(row.getInt("TOTAL_HOUSES_DAMAGED"),1)); //houses damaged
-    info.append(nf(row.getInt("TOTAL_HOUSES_DESTROYED"),1)); //houses destroyed
-    info.append(nf(row.getInt("TOTAL_DAMAGE_MILLIONS_DOLLARS"),1)); //damages
-    info.append(nf(row.getInt("FOCAL_DEPTH"),1)); //focal depth
+    info.append(nf(row.getInt("TOTAL_DEATHS"), 1)); //deaths
+    info.append(nf(row.getInt("TOTAL_HOUSES_DAMAGED"), 1)); //houses damaged
+    info.append(nf(row.getInt("TOTAL_HOUSES_DESTROYED"), 1)); //houses destroyed
+    info.append(nf(row.getInt("TOTAL_DAMAGE_MILLIONS_DOLLARS"), 1)); //damages
+    info.append(nf(row.getInt("FOCAL_DEPTH"), 1)); //focal depth
     if (Float.isNaN(row.getFloat("EQ_PRIMARY"))) {
       info.append("? ? ?"); //magnitude
-    } else{
+    } else {
       info.append(nf(row.getFloat("EQ_PRIMARY"), 0, 1)); //magnitude
     }
-    
-    for(int i = 0; i<info.size()-1; i++){
+
+    for (int i = 0; i<info.size()-1; i++) {
       String s = "0";
-      if(info.get(i).equals(s)){
+      if (info.get(i).equals(s)) {
         info.set(i, "? ? ?");
       }
     }
@@ -54,11 +56,16 @@ class Details {
     c = magColor;
     titleSize = height*0.035;
     extra = 0;
+    opacity = 0;
+    count = 0;
+    incr = width*0.0001;
+   // close = true; FADE OUT
   }
 
   void display() { 
-    //white quad with 60% opacity
-    fill(255, 255, 255, 153);
+    //white quad with 60% opacity (153)
+    float o = map(opacity, 0, 255, 0, 153);
+    fill(255, 255, 255, o);
     noStroke();
     quad(0, 0, width, 0, width, height, 0, height);
 
@@ -67,10 +74,10 @@ class Details {
 
     //ELLIPSES
     ellipseMode(RADIUS);
-    
+
     dropShadow();
     noStroke();
-    fill(c);
+    fill(c, opacity);
 
     //location and date
     ellipse(center.x, center.y, r1, r1);
@@ -89,9 +96,9 @@ class Details {
 
 
     //CENTRAL TEXT
-    fill(255);
+    fill(255, opacity);
     textAlign(CENTER, CENTER);
-    
+
     //country
     checkCountrySize(country);
     textSize(titleSize);
@@ -127,16 +134,36 @@ class Details {
     text("0 to 700km", e5.x, e5.y+height*0.04);
     text("0.0 to 9.9", e6.x, e6.y+height*0.04);
 
+    /*FADE OUT
+     if(close){
+     if (opacity <= 255) {
+     opacity+=80;
+     }   
+     }else{
+     fadeOut();
+     }*/
+    if (opacity <= 255) {
+      opacity+=80;
+    }
+    if (count == 20) {
+      incr = -incr;
+      count = 0;
+    }
+    r1 += incr;
+    r2 += incr;
+    count++;
+
     popMatrix();
   }
-  
-  void dropShadow(){
+
+  void dropShadow() {
     float aux0 = r1-width*0.004;
     float aux1 = r2-width*0.004;
     float a = width*0.004; //shadow deviation
 
-    for(int i=32; i>=0; i-=2){
-      fill(180,180,180,i);
+    for (int i=32; i>=0; i-=2) {
+      float o = map(opacity, 0, 255, 0, i);
+      fill(180, 180, 180, o);
       noStroke();
       ellipse(center.x+a, center.y+a, aux0, aux0);
       ellipse(e1.x+a, e1.y+a, aux1, aux1);
@@ -152,9 +179,9 @@ class Details {
 
 
   void checkCountrySize(String c) {
-    if (c.length() <= 10) {
+    if (c.length() <= 9) {
       titleSize = height*0.035;
-    } else if (c.length() > 10 && c.length() <12) {
+    } else if (c.length() > 9 && c.length() <=12) {
       titleSize = height*0.025;
     } else if (c.length() > 12) {
       titleSize = height*0.025;
@@ -162,4 +189,13 @@ class Details {
       extra = height*0.01;
     }
   }
+
+  /*FADE OUT
+   void fadeOut(){
+   if (opacity > 0) {
+   opacity-=50;
+   }else{
+   showDetails = false;
+   }
+   }*/
 }

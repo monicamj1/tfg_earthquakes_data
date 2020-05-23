@@ -63,16 +63,18 @@ void setup() {
 void draw() {
   shape(map, 0, 0, width, height);
 
-  //display each bubble from the array
   for (Bubble bubble : bubbles) {
     bubble.display(maxMag, minMag, showDetails);
   }
-  
+
   slider.display();
 
   if (showDetails) {
     details.display();
   }
+
+  //Change cursor
+  changeCursor();
 }
 
 
@@ -97,19 +99,34 @@ void mousePressed() {
       slider.pressed = true;
       slider.update(mouseX);
     } else {
-      earthquakesList();
+      earthquakesList(1); //sends int!
     }
   } else {
-    earthquakesList();
+    earthquakesList(1);
     showDetails = false;
-   // details.close = false; FADE OUT
+
+    //FADE OUT: Delete previous line and add this
+    //details.close = false;
   }
 }
-
 
 void mouseReleased() {
   if (slider.pressed) {
     slider.pressed = false;
+  }
+}
+
+
+void changeCursor() {
+  if (showDetails == false) {
+    if (mouseY < height && mouseY > height*0.92) {
+      cursor(HAND);
+    } else if (slider.pressed == true) {
+      cursor(HAND);
+    }else{
+      cursor(ARROW); 
+      earthquakesList(0); //Sends int!
+    }
   }
 }
 
@@ -128,14 +145,14 @@ void removeEarthquakes() {
 }
 
 //check if is the bubble is clicked
-void earthquakesList() {
+void earthquakesList(int c) { //receives int
   for (Bubble bubble : bubbles) {
-    bubble.isClicked();
+    bubble.isClicked(c); //sends int
     if (bubble.selected && showDetails == false) {
       showDetails = true;
       TableRow row = table.findRow(str(bubble.id), "I_D");
       details = new Details(row, bubble.c);
-    }else{
+    } else {
       bubble.noClicked();
     }
   }

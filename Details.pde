@@ -3,11 +3,11 @@ class Details {
   String country, day, month, year, hour, minute;
   StringList info;
   PVector center, e1, e2, e3, e4, e5, e6;
-  float r1, r2, l, extra, incr;
+  float r1, r2, l, extra, incr; //add increase
   color c;
   float titleSize;
-  int opacity, count;
-  //boolean close; FADE OUT
+  int opacity, count; //add opacity and count
+  //boolean close; //FADE OUT
 
 
   Details(TableRow row, color magColor) {
@@ -56,15 +56,17 @@ class Details {
     c = magColor;
     titleSize = height*0.035;
     extra = 0;
+
+    //animation
     opacity = 0;
     count = 0;
     incr = width*0.0001;
-   // close = true; FADE OUT
+    //close = true; //FADE OUT
   }
 
   void display() { 
     //white quad with 60% opacity (153)
-    float o = map(opacity, 0, 255, 0, 153);
+    float o = map(opacity, 0, 255, 0, 153); //adapt opacity animation
     fill(255, 255, 255, o);
     noStroke();
     quad(0, 0, width, 0, width, height, 0, height);
@@ -77,7 +79,7 @@ class Details {
 
     dropShadow();
     noStroke();
-    fill(c, opacity);
+    fill(c, opacity);//add opacity
 
     //location and date
     ellipse(center.x, center.y, r1, r1);
@@ -96,7 +98,7 @@ class Details {
 
 
     //CENTRAL TEXT
-    fill(255, opacity);
+    fill(255, opacity); //add opacity
     textAlign(CENTER, CENTER);
 
     //country
@@ -133,8 +135,9 @@ class Details {
     text("millions $", e4.x, e4.y+height*0.04);
     text("0 to 700km", e5.x, e5.y+height*0.04);
     text("0.0 to 9.9", e6.x, e6.y+height*0.04);
-
-    /*FADE OUT
+    
+    /*
+    //FADE IN AND FADE OUT
      if(close){
      if (opacity <= 255) {
      opacity+=80;
@@ -142,13 +145,18 @@ class Details {
      }else{
      fadeOut();
      }*/
+
+    //Only fade in
     if (opacity <= 255) {
       opacity+=80;
     }
+    
+    //Radius animation
     if (count == 20) {
       incr = -incr;
       count = 0;
     }
+    
     r1 += incr;
     r2 += incr;
     count++;
@@ -162,7 +170,7 @@ class Details {
     float a = width*0.004; //shadow deviation
 
     for (int i=32; i>=0; i-=2) {
-      float o = map(opacity, 0, 255, 0, i);
+      float o = map(opacity, 0, 255, 0, i); //adapt opacity animation
       fill(180, 180, 180, o);
       noStroke();
       ellipse(center.x+a, center.y+a, aux0, aux0);
@@ -190,12 +198,14 @@ class Details {
     }
   }
 
-  /*FADE OUT
+  /*
+  //FADE OUT
    void fadeOut(){
-   if (opacity > 0) {
-   opacity-=50;
-   }else{
-   showDetails = false;
+     if (opacity > 0) {
+       opacity-=50;
+     }else{
+       showDetails = false;
+     }
    }
-   }*/
+   */
 }

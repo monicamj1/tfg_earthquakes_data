@@ -1,6 +1,6 @@
 class Bubble {
-  int id, count;
-  float mag, depth, radius, lat, lon, incr, r;
+  int id, count; //add count
+  float mag, depth, radius, lat, lon, incr; //add increase value
   color orange, red, c;
   boolean selected;
 
@@ -15,7 +15,6 @@ class Bubble {
     //get depth and calculate radius
     depth = row.getInt("FOCAL_DEPTH");
     radius = map(depth, 0, 700, width*0.006, width*0.001);
-    r = radius;
 
     //get magnitude
     mag = row.getFloat("EQ_PRIMARY");
@@ -30,6 +29,7 @@ class Bubble {
     //set increase
     incr = width*0.00003;
     count = (int)random(0, 50);
+ 
   }
 
   void display(float maxMag, float minMag, boolean sD) {
@@ -42,6 +42,7 @@ class Bubble {
     float b = -minMag*a;
     float interpolation = (mag*a+b);
     c = lerpColor(orange, red, interpolation);
+ 
 
     //if there is no mag value, set a grey color
     if (Float.isNaN(mag)) {
@@ -53,16 +54,18 @@ class Bubble {
 
     //Then we draw the ellipse
     fill(c); 
-    ellipse(lon, lat, radius, radius);
+    ellipse(lon, lat, radius, radius);    
 
-    if (!sD) {
-      if(count == 50) {
+
+    if (!sD) { //if showDetails == false
+      if (count == 50) {
         incr = -incr;
         count = 0;
       }
       radius += incr;
       count++;
     }
+    
   }
 
   void dropShadow() {
@@ -77,10 +80,14 @@ class Bubble {
     }
   }
 
-  //if the mouse clicked in the bubble area, then selected = true
-  void isClicked() {
+ 
+  void isClicked(int c) { //receives 0 or 1
     if (mouseX < lon+radius && mouseX > lon-radius && mouseY < lat+radius && mouseY > lat-radius) {
-      selected = true;
+       cursor(HAND);
+      if(c == 1){
+        cursor(ARROW);
+        selected = true;
+      }      
     }
   }
 

@@ -17,10 +17,25 @@ float  maxMag, minMag;
 boolean showDetails;
 Details details;
 
+//zooming
+float scaleValue = 1;
+float transX = 0;
+float transY = 0;
+float factor = 1;
+boolean canZoom = true, canMove = false;
+int zoomCounter = 0;
+float maxOX, maxX, maxOY, maxY, x, y;
+
 
 void setup() {
   //size (720, 480);
   fullScreen();
+  
+  //set screen limits
+  maxOX = 0;
+  x = width;
+  maxOY = 0;
+  y = height;
 
   map = loadShape("map.svg"); 
 
@@ -61,11 +76,28 @@ void setup() {
 
 
 void draw() {
+  
+  //zooming
+  pushMatrix();
+  
+  if (canMove && !slider.pressed) {
+    transX = transX+mouseX-pmouseX;
+    transY = transY+mouseY-pmouseY;
+    updateBubbles(2,0);
+    limitTranslate();
+  }
+  
+  translate(transX, transY);
+  scale(scaleValue);
+  
   shape(map, 0, 0, width, height);
 
   for (Bubble bubble : bubbles) {
     bubble.display(maxMag, minMag, showDetails);
   }
+  
+  popMatrix();
+  //stop zooming
 
   slider.display();
 
@@ -89,6 +121,7 @@ void mouseDragged() {
     } else {
       showDetails = false;
     }
+    canMove = true;
   }
 }
 
@@ -114,8 +147,96 @@ void mouseReleased() {
   if (slider.pressed) {
     slider.pressed = false;
   }
+  canMove = false;
 }
 
+void mouseWheel(MouseEvent e) {
+  if (!showDetails) {
+    if (e.getCount() > 0) { //if zoom in
+      factor = 1.1;
+      scaleValue *= factor; //scale value increases
+      if (scaleValue >= pow(1.1, 20)) { //if scale value is over limit
+        zoomCounter = 20; //limit counter
+        scaleValue = pow(1.1, 20); //limit scale value
+        updateBubbles(0,0); //update bubbles radius
+      } else {
+        zoomCounter++; //zoom counter increases
+        transX -= mouseX; //translate
+        transY -= mouseY;
+        transX *=factor;
+        transY *=factor;
+        transX += mouseX;
+        transY += mouseY;
+        x *= factor;
+        y *= factor;
+        updateBubbles(0,0); //update bubbles radius
+      }
+    } else if (e.getCount() < 0) {
+      factor = 1/1.1;
+      scaleValue *= factor;
+      if (scaleValue <= 1) {
+        zoomCounter = 0;
+        scaleValue = 1;
+        transX=0;
+        transY=0;
+        x = width;
+        y = height;
+        updateBubbles(0,0);
+      } else {
+        zoomCounter--;
+        transX -= mouseX;
+        transY -= mouseY;
+        transX *=factor;
+        transY *=factor;
+        transX += mouseX;
+        transY += mouseY; 
+        x *= factor;
+        y *= factor;
+        updateBubbles(0,0);
+      }
+    }
+    limitTranslate();
+  }
+}
+
+void limitTranslate() {
+
+  if (transX >= maxOX) {
+    transX = maxOX;
+    updateBubbles(1, 1);
+  }
+  if (transY >= maxOY) {
+    transY = maxOY;
+    updateBubbles(1, 2);
+  }
+  maxX = x - width;
+  maxX = -maxX;
+  if (transX <= maxX) {
+    transX = maxX;
+    updateBubbles(1, 3);
+  }
+  maxY = y - height;
+  maxY = -maxY;
+  if (transY <= maxY) {
+    transY = maxY;
+    updateBubbles(1, 4);
+  }
+  
+}
+
+void updateBubbles(int k, int l) {
+  for (Bubble bubble : bubbles) {
+    if(k==0){
+      bubble.changeRadius(factor, scaleValue);
+    }
+    if(k==1){
+      bubble.limitLonLat(l, zoomCounter);
+    }
+    if(k==2){
+      bubble.changeActualPos();
+    }
+  }
+}
 
 void changeCursor() {
   if (showDetails == false) {

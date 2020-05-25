@@ -1,6 +1,6 @@
 class Bubble {
   int id, count; //add count
-  float mag, depth, radius, lat, lon, incr; //add increase value
+  float mag, depth, radius, lat, lon, incr, actualX, actualY, r, xPer, yPer; 
   color orange, red, c;
   boolean selected;
 
@@ -11,10 +11,24 @@ class Bubble {
     //get latitude and longitude
     lat = map(row.getFloat("LATITUDE"), -90, 90, height, 0);
     lon = map(row.getFloat("LONGITUDE"), -180, 180, 0, width);
+    
+    //X AND Y THAT WILL UPDATE
+    actualX = lon;
+    actualY = lat;
+    xPer = 100*lon/width;
+    yPer = 100*lat/height;
+    float newW = width*pow(1.1, zoomCounter);
+    float newH = height*pow(1.1, zoomCounter);
+    actualX = transX+(newW*xPer/100);
+    actualY = transY+(newH*yPer/100);
+
 
     //get depth and calculate radius
     depth = row.getInt("FOCAL_DEPTH");
     radius = map(depth, 0, 700, width*0.006, width*0.001);
+    r = radius; //auxilar radius
+    
+    radius = radius*pow(1/1.1, zoomCounter); //ZOOMING
 
     //get magnitude
     mag = row.getFloat("EQ_PRIMARY");
@@ -27,7 +41,7 @@ class Bubble {
     selected = false;
 
     //set increase
-    incr = width*0.00003;
+    incr = width*0.00003*pow(1/1.1, zoomCounter); //ZOOMING
     count = (int)random(0, 50);
  
   }
@@ -82,7 +96,7 @@ class Bubble {
 
  
   void isClicked(int c) { //receives 0 or 1
-    if (mouseX < lon+radius && mouseX > lon-radius && mouseY < lat+radius && mouseY > lat-radius) {
+    if (mouseX < actualX+r && mouseX > actualX-r && mouseY < actualY+r && mouseY > actualY-r) { //CHANGES ACTUAL POSITION WHILE ZOOMING
        cursor(HAND);
       if(c == 1){
         cursor(ARROW);
@@ -91,8 +105,56 @@ class Bubble {
     }
   }
 
-
   void noClicked() {
     selected = false;
+  }
+  
+  //CHANGE RADIUS WHILE ZOOMING
+  void changeRadius(float f, float v) {
+    float prev = radius;
+    if (v <= 1) {
+      radius = r;
+      actualX = lon;
+      actualY = lat;
+    } else if (v>= pow(1.1, 20)) {
+      radius = prev;
+    } else {
+      radius *=(1/f);
+      actualX -= mouseX;
+      actualY -= mouseY;
+      actualX *=f;
+      actualY *=f;
+      incr *= (1/f);
+      actualX += mouseX;
+      actualY += mouseY;
+    }
+  }
+  
+  void changeActualPos(){
+    actualX = actualX+mouseX-pmouseX;
+    actualY = actualY+mouseY-pmouseY;
+  }
+  
+  void limitLonLat(int l, int zoom){
+    float newW = width*pow(1.1, zoom);
+    float newH = height*pow(1.1, zoom);
+    switch(l){
+      case 1:
+            actualX = transX+(newW*xPer/100);
+            break;
+      case 2:
+           actualY = transY+(newH*yPer/100);
+           // actualY = newH*yPer/100;
+            break;
+      case 3:
+            actualX = transX+(newW*xPer/100);
+            break;
+      case 4:
+            actualY = transY+(newH*yPer/100);
+            break;
+      default:
+            break;
+    }
+    
   }
 }

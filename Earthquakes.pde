@@ -30,7 +30,7 @@ float maxOX, maxX, maxOY, maxY, x, y;
 void setup() {
   //size (720, 480);
   fullScreen();
-  
+
   //set screen limits
   maxOX = 0;
   x = width;
@@ -76,26 +76,27 @@ void setup() {
 
 
 void draw() {
-  
+
+
   //zooming
   pushMatrix();
-  
+
   if (canMove && !slider.pressed) {
     transX = transX+mouseX-pmouseX;
     transY = transY+mouseY-pmouseY;
-    updateBubbles(2,0);
+    updateBubbles(2, 0);
     limitTranslate();
   }
-  
+
   translate(transX, transY);
   scale(scaleValue);
-  
+
   shape(map, 0, 0, width, height);
 
   for (Bubble bubble : bubbles) {
     bubble.display(maxMag, minMag, showDetails);
   }
-  
+
   popMatrix();
   //stop zooming
 
@@ -112,7 +113,7 @@ void draw() {
 
 void mouseDragged() {
   if (showDetails == false) {
-    if (mouseY < height && mouseY > height*0.92) {
+    if (mouseY < height && mouseY > height*0.92 && canMove == false) {
       slider.pressed = true;
       slider.update(mouseX);
     }
@@ -158,7 +159,7 @@ void mouseWheel(MouseEvent e) {
       if (scaleValue >= pow(1.1, 20)) { //if scale value is over limit
         zoomCounter = 20; //limit counter
         scaleValue = pow(1.1, 20); //limit scale value
-        updateBubbles(0,0); //update bubbles radius
+        updateBubbles(0, 0); //update bubbles radius
       } else {
         zoomCounter++; //zoom counter increases
         transX -= mouseX; //translate
@@ -169,7 +170,7 @@ void mouseWheel(MouseEvent e) {
         transY += mouseY;
         x *= factor;
         y *= factor;
-        updateBubbles(0,0); //update bubbles radius
+        updateBubbles(0, 0); //update bubbles radius
       }
     } else if (e.getCount() < 0) {
       factor = 1/1.1;
@@ -181,7 +182,7 @@ void mouseWheel(MouseEvent e) {
         transY=0;
         x = width;
         y = height;
-        updateBubbles(0,0);
+        updateBubbles(0, 0);
       } else {
         zoomCounter--;
         transX -= mouseX;
@@ -192,7 +193,7 @@ void mouseWheel(MouseEvent e) {
         transY += mouseY; 
         x *= factor;
         y *= factor;
-        updateBubbles(0,0);
+        updateBubbles(0, 0);
       }
     }
     limitTranslate();
@@ -221,18 +222,17 @@ void limitTranslate() {
     transY = maxY;
     updateBubbles(1, 4);
   }
-  
 }
 
 void updateBubbles(int k, int l) {
   for (Bubble bubble : bubbles) {
-    if(k==0){
+    if (k==0) {
       bubble.changeRadius(factor, scaleValue);
     }
-    if(k==1){
+    if (k==1) {
       bubble.limitLonLat(l, zoomCounter);
     }
-    if(k==2){
+    if (k==2) {
       bubble.changeActualPos();
     }
   }
@@ -240,13 +240,16 @@ void updateBubbles(int k, int l) {
 
 void changeCursor() {
   if (showDetails == false) {
-    if (mouseY < height && mouseY > height*0.92) {
+    if (mouseY < height && mouseY > height*0.92 && canMove == false) { //if the cursor is over the slider
       cursor(HAND);
-    } else if (slider.pressed == true) {
+    } else if (slider.pressed == true) { //if the slider is pressed
       cursor(HAND);
-    }else{
-      cursor(ARROW); 
-      earthquakesList(0); //Sends int!
+    } else if (canMove && slider.pressed == false) { //if the user dragging the map
+      if (zoomCounter > 0) {
+        cursor(MOVE);
+      }
+    } else { //else, check for each ellipse if the mouse is over it
+      earthquakesList(0); //Sends int
     }
   }
 }

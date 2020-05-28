@@ -94,7 +94,7 @@ void draw() {
   shape(map, 0, 0, width, height);
 
   for (Bubble bubble : bubbles) {
-    bubble.display(maxMag, minMag, showDetails);
+    bubble.display(maxMag, minMag, showDetails);   
   }
 
   popMatrix();
@@ -249,8 +249,18 @@ void changeCursor() {
         cursor(MOVE);
       }
     } else { //else, check for each ellipse if the mouse is over it
-      earthquakesList(0); //Sends int
-    }
+      //earthquakesList(0); //Sends int
+      for (Bubble bubble : bubbles) {
+       if (mouseX <= bubble.actualX+bubble.r && mouseX >= bubble.actualX-bubble.r && mouseY <= bubble.actualY+bubble.r && mouseY >= bubble.actualY-bubble.r) {
+        cursor(HAND);
+       }
+       else{
+         cursor(ARROW);
+       }
+     }
+    }     
+  }else{
+  noCursor();
   }
 }
 

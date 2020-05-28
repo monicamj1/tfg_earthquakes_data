@@ -96,15 +96,15 @@ class Bubble {
   //THE CHANGING CURSOR THING DOESN'T WORK
   void isClicked(int c) { //receives 0 or 1
     if (mouseX <= actualX+r && mouseX >= actualX-r && mouseY <= actualY+r && mouseY >= actualY-r) {
-      cursor(HAND); //hand icon if it's inside the area of the ellipse
+     // cursor(HAND); //hand icon if it's inside the area of the ellipse
       
       if (c == 1) { //if receives 1, the ellipse is selected
-        cursor(ARROW);
+        //cursor(ARROW);
         selected = true;
       }
       
     } else {
-      cursor(ARROW); //arrow icon if it's outside the area of the ellipse
+      //cursor(ARROW); //arrow icon if it's outside the area of the ellipse
     }
   }
 

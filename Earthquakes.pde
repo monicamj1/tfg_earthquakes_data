@@ -77,7 +77,6 @@ void setup() {
 
 void draw() {
 
-
   //zooming
   pushMatrix();
 
@@ -133,10 +132,10 @@ void mousePressed() {
       slider.pressed = true;
       slider.update(mouseX);
     } else {
-      earthquakesList(1); //sends int!
+      earthquakesList(); //sends int!
     }
   } else {
-    earthquakesList(1);
+    earthquakesList();
     showDetails = false;
 
     //FADE OUT: Delete previous line and add this
@@ -238,31 +237,36 @@ void updateBubbles(int k, int l) {
   }
 }
 
+
 void changeCursor() {
   if (showDetails == false) {
     if (mouseY < height && mouseY > height*0.92 && canMove == false) { //if the cursor is over the slider
       cursor(HAND);
     } else if (slider.pressed == true) { //if the slider is pressed
       cursor(HAND);
-    } else if (canMove && slider.pressed == false) { //if the user dragging the map
+    } else if (canMove && slider.pressed == false) { //if the user is dragging the map
       if (zoomCounter > 0) {
         cursor(MOVE);
       }
     } else { //else, check for each ellipse if the mouse is over it
-      //earthquakesList(0); //Sends int
+      boolean change = false;
       for (Bubble bubble : bubbles) {
        if (mouseX <= bubble.actualX+bubble.r && mouseX >= bubble.actualX-bubble.r && mouseY <= bubble.actualY+bubble.r && mouseY >= bubble.actualY-bubble.r) {
-        cursor(HAND);
+        change = true;
        }
-       else{
-         cursor(ARROW);
-       }
+     }
+     if(change){
+       cursor(HAND);
+     }
+     else{
+       cursor(ARROW);
      }
     }     
   }else{
   noCursor();
   }
 }
+
 
 //load new earthquakes(Bubble objects) to the array
 void loadEarthquakes() {
@@ -279,9 +283,9 @@ void removeEarthquakes() {
 }
 
 //check if is the bubble is clicked
-void earthquakesList(int c) { //receives int
+void earthquakesList() {
   for (Bubble bubble : bubbles) {
-    bubble.isClicked(c); //sends int
+    bubble.isClicked();
     if (bubble.selected && showDetails == false) {
       showDetails = true;
       TableRow row = table.findRow(str(bubble.id), "I_D");

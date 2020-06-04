@@ -1,4 +1,4 @@
-//database
+ //database
 Table table;
 
 //map
@@ -25,6 +25,10 @@ float factor = 1;
 boolean canZoom = true, canMove = false;
 int zoomCounter = 0;
 float maxOX, maxX, maxOY, maxY, x, y;
+
+//map legend
+MapKey legend;
+boolean info;
 
 
 void setup() {
@@ -61,6 +65,8 @@ void setup() {
   }
   //initialize slider and send list
   slider = new Slider(yearList); 
+  legend = new MapKey();
+  info = false;
 
   maxMag = max(magArray);
   minMag = min(magArray);
@@ -98,9 +104,16 @@ void draw() {
 
   popMatrix();
   //stop zooming
-
+  
+  
   slider.display();
-
+  
+  if(info){
+    legend.displayKey();
+  }else{
+    legend.displayButton();
+  }
+  
   if (showDetails) {
     details.display();
   }
@@ -128,7 +141,10 @@ void mouseDragged() {
 
 void mousePressed() {
   if (showDetails == false) {
-    if (mouseY < height && mouseY > height*0.92) {
+    if (mouseX < legend.xPos+legend.rad/2 && mouseX > legend.xPos-legend.rad/2 && mouseY > legend.yPos-legend.rad/2 && mouseY < legend.yPos+legend.rad/2) {
+     info = !info;
+    }
+    else if (mouseY < height && mouseY > height*0.92) {
       slider.pressed = true;
       slider.update(mouseX);
     } else {
@@ -200,7 +216,6 @@ void mouseWheel(MouseEvent e) {
 }
 
 void limitTranslate() {
-
   if (transX >= maxOX) {
     transX = maxOX;
     updateBubbles(1, 1);
@@ -240,7 +255,10 @@ void updateBubbles(int k, int l) {
 
 void changeCursor() {
   if (showDetails == false) {
-    if (mouseY < height && mouseY > height*0.92 && canMove == false) { //if the cursor is over the slider
+    if(mouseX < legend.xPos+legend.rad/2 && mouseX > legend.xPos-legend.rad/2 && mouseY > legend.yPos-legend.rad/2 && mouseY < legend.yPos+legend.rad/2){
+      cursor(HAND);
+    }
+    else if (mouseY < height && mouseY > height*0.92 && canMove == false) { //if the cursor is over the slider
       cursor(HAND);
     } else if (slider.pressed == true) { //if the slider is pressed
       cursor(HAND);

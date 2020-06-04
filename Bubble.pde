@@ -34,11 +34,11 @@ class Bubble {
     mag = row.getFloat("EQ_PRIMARY");
 
     //set colors
-    red = color(255, 102, 102);
-    orange = color(255, 204, 102);
+    //red = color(255, 102, 102);
+    //orange = color(255, 204, 102);
     
-   // red = color(255, 77, 77);
-    //orange = color(255, 220, 77);
+    red = color(255, 77, 77);
+    orange = color(255, 220, 77);
 
 
     //set selected

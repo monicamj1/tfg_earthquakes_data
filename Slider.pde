@@ -111,6 +111,7 @@ class Slider {
       fill(j, j, j, i);
       noStroke();
       ellipse(pos.x, pos.y, aux, aux);
+      rectMode(CENTER);
       rect(pos.x, pos.y-height*0.047, w, h, 500);
       aux += aux*f;
       w += w*f2;

@@ -22,7 +22,7 @@ float scaleValue = 1;
 float transX = 0;
 float transY = 0;
 float factor = 1;
-boolean canZoom = true, canMove = false;
+boolean canMove = false;
 int zoomCounter = 0;
 float maxOX, maxX, maxOY, maxY, x, y;
 

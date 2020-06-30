@@ -13,10 +13,23 @@ class Details {
   Details(TableRow row, color magColor) {
 
     info  = new StringList();
-    info.append(nf(row.getInt("TOTAL_DEATHS"), 1)); //deaths
+    
+    if (Float.isNaN(row.getFloat("TOTAL_DEATHS"))) { //deaths
+      info.append("? ? ?"); //magnitude
+    } else {
+      info.append(nf(int(row.getFloat("TOTAL_DEATHS")))); 
+    }
+    
     info.append(nf(row.getInt("TOTAL_HOUSES_DAMAGED"), 1)); //houses damaged
+    
     info.append(nf(row.getInt("TOTAL_HOUSES_DESTROYED"), 1)); //houses destroyed
-    info.append(nf(row.getInt("TOTAL_DAMAGE_MILLIONS_DOLLARS"), 1)); //damages
+    
+    if (Float.isNaN(row.getFloat("TOTAL_DAMAGE_MILLIONS_DOLLARS"))) { //damages
+      info.append("? ? ?"); //magnitude
+    } else {
+      info.append(nf(row.getFloat("TOTAL_DAMAGE_MILLIONS_DOLLARS"), 0, 1)); 
+    }
+    
     info.append(nf(row.getInt("FOCAL_DEPTH"), 1)); //focal depth
     if (Float.isNaN(row.getFloat("EQ_PRIMARY"))) {
       info.append("? ? ?"); //magnitude
